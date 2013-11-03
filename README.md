@@ -5,7 +5,7 @@ ExecPHP
 [![Dependency Status](https://gemnasium.com/kerimdzhanov/execphp.png)](https://gemnasium.com/kerimdzhanov/execphp)
 [![Coverage Status](https://coveralls.io/repos/kerimdzhanov/execphp/badge.png)](https://coveralls.io/r/kerimdzhanov/execphp)
 
-Lets you run php code on remote server from ruby.
+ExecPHP lets you run PHP code on a remote server from ruby.
 
 Requirements
 ------------
