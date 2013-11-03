@@ -6,14 +6,16 @@ ExecPHP
 [![Coverage Status](https://coveralls.io/repos/kerimdzhanov/execphp/badge.png)](https://coveralls.io/r/kerimdzhanov/execphp)
 
 ExecPHP lets you run PHP code on a remote server from ruby.
+You need to have up and running Apache/Nginx/IIS server with `mod_php` enabled in order to run your PHP code there.
 
 Requirements
 ------------
 
-*Client-side:*
+**Client-side:**
 * Ruby 2.0.0
 
-*Server-side:*
+**Server-side:**
+* Apache/Nginx/IIS
 * PHP4, PHP5
 
 Installation
