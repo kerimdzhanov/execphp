@@ -1,13 +1,13 @@
 $0 = 'execphp'
 ARGV.clear
 
+require 'execphp'
+require 'webmock/rspec'
+
 if ENV['CI']
   require 'coveralls'
   Coveralls.wear!
 end
-
-require 'execphp'
-require 'webmock/rspec'
 
 TEMP_DIR = (File.symlink?('/tmp') ? "/#{File.readlink('/tmp')}" : '/tmp')
 
