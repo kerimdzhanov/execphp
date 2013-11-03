@@ -1,6 +1,8 @@
 ExecPHP
 =======
 
+[![Build Status](https://travis-ci.org/kerimdzhanov/execphp.png?branch=master)](https://travis-ci.org/kerimdzhanov/execphp)
+
 Lets you run php code on remote server from ruby.
 
 Requirements
