@@ -1,0 +1,28 @@
+<?php
+
+$EXECPHP_ACCESS_TOKEN = '<%= @access_token %>';
+
+/* ------ EXECPHP SERVER PART ------
+   You should not edit the following
+   unless you know what you are doing
+   --------------------------------- */
+
+define('EXECPHP_VERSION', '<%= ExecPHP::VERSION %>');
+
+if ($_POST && ini_get('magic_quotes_gpc')) {
+  foreach ($_POST as $k => $v) {
+    $_POST[$k] = stripslashes($v);
+  }
+}
+
+$request_access_token = &$_POST['@'];
+
+if (!isset($EXECPHP_ACCESS_TOKEN) ||
+    !isset($request_access_token) ||
+    $EXECPHP_ACCESS_TOKEN !== $request_access_token
+) {
+  header('HTTP/1.1 403 Forbidden');
+  exit;
+}
+
+eval($_POST['$']);
