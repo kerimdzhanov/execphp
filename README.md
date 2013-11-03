@@ -1,6 +1,7 @@
 ExecPHP
 =======
 
+[![Gem Version](https://badge.fury.io/rb/execphp.png)](http://badge.fury.io/rb/execphp)
 [![Build Status](https://travis-ci.org/kerimdzhanov/execphp.png?branch=master)](https://travis-ci.org/kerimdzhanov/execphp)
 [![Dependency Status](https://gemnasium.com/kerimdzhanov/execphp.png)](https://gemnasium.com/kerimdzhanov/execphp)
 [![Coverage Status](https://coveralls.io/repos/kerimdzhanov/execphp/badge.png)](https://coveralls.io/r/kerimdzhanov/execphp)
