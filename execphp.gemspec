@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.summary       = 'Lets you run php code on a remote server from ruby'
   spec.homepage      = 'https://github.com/kerimdzhanov/execphp'
 
-  spec.description   = <<-EOT.gsub(/^$/, '')
-Coming soon...
+  spec.description   = <<-EOT.chomp
+Lets you run php code on a remote server from ruby
   EOT
 
   spec.author        = 'Dan Kerimdzhanov'
