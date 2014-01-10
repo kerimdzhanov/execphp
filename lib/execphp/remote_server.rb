@@ -1,6 +1,5 @@
 require 'net/http'
 require 'uri'
-require 'erb'
 
 module ExecPHP
 
@@ -23,32 +22,6 @@ module ExecPHP
     def initialize(options = {})
       @exec_uri     = URI(options[:exec_uri])
       @access_token = options[:access_token]
-    end
-
-    # Generate `exec.php` file for uploading to a remote server.
-    # @param output_dir [String] output directory
-    # @param output_file [String] the name of a file
-    # @param overwrite [boolean] true to overwrite existing file
-    def generate_exec_php_file(output_dir,
-                               output_file: 'exec.php',
-                               overwrite: false)
-      output_filename = File.join(output_dir, output_file)
-
-      if !overwrite && File.exists?(output_filename)
-        return false
-      end
-
-      erb = ERB.new(File.read(File.join(__dir__, 'templates/exec.php.erb')))
-
-      tpl = erb.def_class((Class.new do
-        def initialize(access_token)
-          @access_token = access_token
-        end
-      end), 'render')
-
-      output = tpl.new(@access_token).render
-
-      File.open(output_filename) { |io| io.write(output) }
     end
 
     # Push a given script batch to a remote server for execution.

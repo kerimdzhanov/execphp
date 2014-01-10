@@ -20,52 +20,6 @@ module ExecPHP
       end
     end
 
-    describe '#generate_exec_php_file' do
-      let(:output_dir) { File.join(TEMP_DIR, 'execphp') }
-      let(:output_filename) { File.join(output_dir, 'exec.php') }
-
-      def generate!
-        server.generate_exec_php_file(output_dir)
-      end
-
-      it 'creates `exec.php` file in a specified output dir' do
-        expect(File).to receive(:open).with(output_filename)
-        generate!
-      end
-
-      it 'puts $EXECPHP_ACCESS_TOKEN variable definition' do
-        io_mock = double
-        expect(io_mock).to receive(:write) do |script|
-          expect(script).to include "$EXECPHP_ACCESS_TOKEN = '!@#$%^';\n"
-        end
-
-        expect(File).to(receive(:open)) { |f, &block| block.call(io_mock) }
-
-        generate!
-      end
-
-      it 'puts `EXECPHP_VERSION` constant definition' do
-        io_mock = double
-        expect(io_mock).to receive(:write) do |script|
-          expect(script).to include "define('EXECPHP_VERSION', '#{ExecPHP::VERSION}');\n"
-        end
-
-        expect(File).to(receive(:open)) { |f, &block| block.call(io_mock) }
-
-        generate!
-      end
-
-      context 'when output file is already exists and :overwrite is not given' do
-        before(:each) do
-          expect(File).to receive(:exists?).and_return true
-        end
-
-        it 'returns false' do
-          expect(generate!).to be_false
-        end
-      end
-    end
-
     describe '#push' do
       let(:batch) do
         ScriptBatch.new do |batch|
