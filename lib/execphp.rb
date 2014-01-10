@@ -1,7 +1,7 @@
 require 'execphp/version'
 
 module ExecPHP
-  autoload :Template,     'execphp/template'
+  autoload :ServerSideAccessor, 'execphp/server_side_accessor'
   autoload :RemoteServer, 'execphp/remote_server'
-  autoload :ScriptBatch,  'execphp/script_batch'
+  autoload :ScriptBatch, 'execphp/script_batch'
 end
