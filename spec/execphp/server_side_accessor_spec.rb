@@ -40,5 +40,18 @@ define('EXECPHP_VERSION', '#{ExecPHP::VERSION}');
       end
     end
 
+    describe '#generate' do
+      let(:accessor) { ServerSideAccessor.new('851132200bfeaf6e0ff27f1be88413ca') }
+
+      before(:each) do
+        allow(accessor).to receive(:render).and_return("<?php\n")
+      end
+
+      it 'generates a script file with a given filename' do
+        expect(File).to receive(:write).with('/path/to/exec.php', "<?php\n")
+        accessor.generate('/path/to/exec.php')
+      end
+    end
+
   end
 end

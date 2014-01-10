@@ -14,6 +14,11 @@ module ExecPHP
       @access_token = access_token
     end
 
+    # @param filename [String] output filename
+    def generate(filename)
+      File.write(filename, render)
+    end
+
   end
 
   ERB.new(File.read(File.join(__dir__, 'exec.php.erb')))
