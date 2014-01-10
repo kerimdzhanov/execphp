@@ -1,5 +1,6 @@
 require 'net/http'
 require 'uri'
+require 'json'
 
 module ExecPHP
 
@@ -23,6 +24,39 @@ module ExecPHP
     def initialize(execphp_url, access_token)
       @execphp_uri  = URI(execphp_url)
       @access_token = access_token
+    end
+
+    def save_as(filename)
+      format = File.extname(filename)[1, 4]
+
+      config = {
+        'execphp_url' => @execphp_uri.to_s,
+        'access_token' => @access_token
+      }
+
+      File.write(filename, case format
+        when 'yaml'
+          YAML.dump(config)
+        when 'json'
+          JSON.pretty_generate(config)
+        else
+          raise "Unrecognized config file format (#{format})"
+      end)
+    end
+
+    def self.from_file(filename)
+      format = File.extname(filename)[1, 4]
+
+      config = case format
+        when 'yaml'
+          YAML.load_file(filename)
+        when 'json'
+          JSON.load(File.read filename)
+        else
+          raise "Unrecognized config file format (#{format})"
+      end
+
+      new(config['execphp_url'], config['access_token'])
     end
 
     # Push a given script batch to a remote server for execution.

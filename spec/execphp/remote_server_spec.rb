@@ -17,6 +17,71 @@ module ExecPHP
       end
     end
 
+    describe '#save_as' do
+      context 'when filename extension is .yaml' do
+        let(:filename) { '/path/to/config.yaml' }
+
+        it 'saves config as yaml' do
+          expect(File).to receive(:write)
+              .with('/path/to/config.yaml', <<-YAML)
+---
+execphp_url: http://localhost/exec.php
+access_token: 851132200bfeaf6e0ff27f1be88413ca
+          YAML
+
+          server.save_as(filename)
+        end
+      end
+
+      context 'when filename extension is .json' do
+        let(:filename) { '/path/to/config.json' }
+
+        it 'saves config as json' do
+          expect(File).to receive(:write)
+              .with('/path/to/config.json', <<-JSON.chomp)
+{
+  "execphp_url": "http://localhost/exec.php",
+  "access_token": "851132200bfeaf6e0ff27f1be88413ca"
+}
+          JSON
+
+          server.save_as(filename)
+        end
+      end
+
+      context 'when filename extension is unknown' do
+        let(:filename) { '/path/to/config.jpeg' }
+
+        it 'raises an error' do
+          expect {
+            server.save_as(filename)
+          }.to raise_error RuntimeError, 'Unrecognized config file format (jpeg)'
+        end
+      end
+    end
+
+    describe '.from_file', focus: true do
+      context 'when filename extension is .yaml' do
+        let(:filename) { File.join(__dir__, '../fixtures/remote-server.yaml') }
+
+        it 'loads a yaml config' do
+          server = RemoteServer.from_file(filename)
+          expect(server.execphp_uri).to eq URI('http://localhost/exec.php')
+          expect(server.access_token).to eq '851132200bfeaf6e0ff27f1be88413ca'
+        end
+      end
+
+      context 'when filename extension is .json' do
+        let(:filename) { File.join(__dir__, '../fixtures/remote-server.json') }
+
+        it 'loads a json config' do
+          server = RemoteServer.from_file(filename)
+          expect(server.execphp_uri).to eq URI('http://localhost/exec.php')
+          expect(server.access_token).to eq '851132200bfeaf6e0ff27f1be88413ca'
+        end
+      end
+    end
+
     describe '#push' do
       let(:batch) do
         ScriptBatch.new do |batch|
