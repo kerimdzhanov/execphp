@@ -3,20 +3,17 @@ require 'spec_helper'
 module ExecPHP
   describe RemoteServer do
     let(:server) do
-      RemoteServer.new(
-        exec_uri:     'http://localhost/exec.php',
-        access_token: '!@#$%^'
-      )
+      RemoteServer.new('http://localhost/exec.php', '851132200bfeaf6e0ff27f1be88413ca')
     end
 
     describe '#initialize' do
       it 'parses and assigns a given :exec_uri' do
-        expect(server.exec_uri).to be_a URI
-        expect(server.exec_uri.to_s).to eq('http://localhost/exec.php')
+        expect(server.execphp_uri).to be_a URI
+        expect(server.execphp_uri.to_s).to eq 'http://localhost/exec.php'
       end
 
       it 'assigns given :access_token' do
-        expect(server.access_token).to eq '!@#$%^'
+        expect(server.access_token).to eq '851132200bfeaf6e0ff27f1be88413ca'
       end
     end
 
@@ -40,7 +37,7 @@ module ExecPHP
         server.push(batch)
 
         a_request(:post, 'http://localhost/exec.php').
-          with(body: hash_including('@' => '!@#$%^')).
+          with(body: hash_including('@' => '851132200bfeaf6e0ff27f1be88413ca')).
             should have_been_requested
       end
 
