@@ -1,4 +1,6 @@
 require 'execphp/version'
+require 'yaml'
+require 'json'
 
 module ExecPHP
   autoload :ServerSideAccessor, 'execphp/server_side_accessor'
