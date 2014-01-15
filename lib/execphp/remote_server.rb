@@ -52,10 +52,10 @@ module ExecPHP
       new(config['execphp_url'], config['access_token'])
     end
 
-    # Push a given script batch to a remote server for execution.
+    # Send a given script batch to a remote server for execution.
     # @param batch [ScriptBatch] script batch to execute
     # @param block [Proc] optional callback
-    def push(batch, &block)
+    def exec(batch, &block)
       @http ||= Net::HTTP.new(@execphp_uri.host, @execphp_uri.port)
       @request ||= Net::HTTP::Post.new(@execphp_uri.request_uri)
 
@@ -79,7 +79,7 @@ module ExecPHP
       end
 
       begin
-        version = push(batch).body
+        version = exec(batch).body
         return version if version =~ /^\d\.\d\.\d$/
       rescue StandardError
         nil

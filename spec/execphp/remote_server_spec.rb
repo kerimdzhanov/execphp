@@ -2,18 +2,19 @@ require 'spec_helper'
 
 module ExecPHP
   describe RemoteServer do
-    let(:server) do
-      RemoteServer.new('http://localhost/exec.php', '851132200bfeaf6e0ff27f1be88413ca')
+    let(:remote_server) do
+      RemoteServer.new('http://localhost/exec.php', '!@#$%')
     end
 
     describe '#initialize' do
       it 'parses and assigns a given :exec_uri' do
-        expect(server.execphp_uri).to be_a URI
-        expect(server.execphp_uri.to_s).to eq 'http://localhost/exec.php'
+        execphp_uri = remote_server.execphp_uri
+        expect(execphp_uri).to be_a URI
+        expect(execphp_uri.to_s).to eq 'http://localhost/exec.php'
       end
 
-      it 'assigns given :access_token' do
-        expect(server.access_token).to eq '851132200bfeaf6e0ff27f1be88413ca'
+      it 'assigns a given :access_token' do
+        expect(remote_server.access_token).to eq '!@#$%'
       end
     end
 
@@ -26,10 +27,10 @@ module ExecPHP
               .with('/path/to/config.yaml', <<-YAML)
 ---
 execphp_url: http://localhost/exec.php
-access_token: 851132200bfeaf6e0ff27f1be88413ca
+access_token: '!@#$%'
           YAML
 
-          server.save_as(filename)
+          remote_server.save_as(filename)
         end
       end
 
@@ -41,11 +42,11 @@ access_token: 851132200bfeaf6e0ff27f1be88413ca
               .with('/path/to/config.json', <<-JSON.chomp)
 {
   "execphp_url": "http://localhost/exec.php",
-  "access_token": "851132200bfeaf6e0ff27f1be88413ca"
+  "access_token": "!@#$%"
 }
           JSON
 
-          server.save_as(filename)
+          remote_server.save_as(filename)
         end
       end
 
@@ -54,20 +55,20 @@ access_token: 851132200bfeaf6e0ff27f1be88413ca
 
         it 'raises an error' do
           expect {
-            server.save_as(filename)
+            remote_server.save_as(filename)
           }.to raise_error RuntimeError, 'Unrecognized config file format (jpeg)'
         end
       end
     end
 
-    describe '.from_file', focus: true do
+    describe '.from_file' do
       context 'when filename extension is .yaml' do
         let(:filename) { File.join(__dir__, '../fixtures/remote-server.yaml') }
 
         it 'loads a yaml config' do
-          server = RemoteServer.from_file(filename)
-          expect(server.execphp_uri).to eq URI('http://localhost/exec.php')
-          expect(server.access_token).to eq '851132200bfeaf6e0ff27f1be88413ca'
+          remote_server = RemoteServer.from_file(filename)
+          expect(remote_server.execphp_uri).to eq URI('http://localhost/exec.php')
+          expect(remote_server.access_token).to eq '%$#@!'
         end
       end
 
@@ -75,39 +76,37 @@ access_token: 851132200bfeaf6e0ff27f1be88413ca
         let(:filename) { File.join(__dir__, '../fixtures/remote-server.json') }
 
         it 'loads a json config' do
-          server = RemoteServer.from_file(filename)
-          expect(server.execphp_uri).to eq URI('http://localhost/exec.php')
-          expect(server.access_token).to eq '851132200bfeaf6e0ff27f1be88413ca'
+          remote_server = RemoteServer.from_file(filename)
+          expect(remote_server.execphp_uri).to eq URI('http://localhost/exec.php')
+          expect(remote_server.access_token).to eq '!%@$#'
         end
       end
     end
 
-    describe '#push' do
+    describe '#exec' do
       let(:batch) do
-        ScriptBatch.new do |batch|
-          batch << 'echo "PHP Test!";'
-        end
+        ScriptBatch.new { |s| s << 'echo "PHP Test!";' }
       end
 
       before(:each) { stub_request(:post, 'http://localhost/exec.php') }
 
       it 'pushes a given script batch to a specified :exec_uri' do
-        server.push(batch)
+        remote_server.exec(batch)
 
         a_request(:post, 'http://localhost/exec.php').
           should have_been_requested
       end
 
       it 'sends remote server\'s @access_token' do
-        server.push(batch)
+        remote_server.exec(batch)
 
         a_request(:post, 'http://localhost/exec.php').
-          with(body: hash_including('@' => '851132200bfeaf6e0ff27f1be88413ca')).
+          with(body: hash_including('@' => '!@#$%')).
             should have_been_requested
       end
 
       it 'sends batch script\'s @buffer' do
-        server.push(batch)
+        remote_server.exec(batch)
 
         a_request(:post, 'http://localhost/exec.php').
           with(body: hash_including({'$' => "echo \"PHP Test!\";\n"})).
@@ -119,7 +118,7 @@ access_token: 851132200bfeaf6e0ff27f1be88413ca
       it 'sends the `echo EXECPHP_VERSION;` script batch' do
         stub_request(:post, 'http://localhost/exec.php')
 
-        server.remote_version
+        remote_server.remote_version
 
         a_request(:post, 'http://localhost/exec.php').
           with(body: hash_including('$' => "echo EXECPHP_VERSION;\n")).
@@ -132,7 +131,7 @@ access_token: 851132200bfeaf6e0ff27f1be88413ca
         end
 
         it 'returns nil' do
-          expect(server.remote_version).to be_nil
+          expect(remote_server.remote_version).to be_nil
         end
       end
 
@@ -143,7 +142,7 @@ access_token: 851132200bfeaf6e0ff27f1be88413ca
         end
 
         it 'returns nil' do
-          expect(server.remote_version).to be_nil
+          expect(remote_server.remote_version).to be_nil
         end
       end
 
@@ -154,7 +153,7 @@ access_token: 851132200bfeaf6e0ff27f1be88413ca
         end
 
         it 'returns nil' do
-          expect(server.remote_version).to be_nil
+          expect(remote_server.remote_version).to be_nil
         end
       end
 
@@ -165,7 +164,7 @@ access_token: 851132200bfeaf6e0ff27f1be88413ca
         end
 
         it 'returns version number definition' do
-          expect(server.remote_version).to eq '1.2.3'
+          expect(remote_server.remote_version).to eq '1.2.3'
         end
       end
     end
