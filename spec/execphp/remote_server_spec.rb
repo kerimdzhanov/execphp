@@ -114,25 +114,15 @@ access_token: '!@#$%'
       end
     end
 
-    describe '#remote_version' do
+    describe '#version' do
       it 'sends the `echo EXECPHP_VERSION;` script batch' do
         stub_request(:post, 'http://localhost/exec.php')
 
-        remote_server.remote_version
+        remote_server.version
 
         a_request(:post, 'http://localhost/exec.php').
           with(body: hash_including('$' => "echo EXECPHP_VERSION;\n")).
             should have_been_requested
-      end
-
-      context 'when request is failed' do
-        before(:each) do
-          stub_request(:post, 'http://localhost/exec.php').to_raise StandardError
-        end
-
-        it 'returns nil' do
-          expect(remote_server.remote_version).to be_nil
-        end
       end
 
       context 'when response status is not ok' do
@@ -142,7 +132,7 @@ access_token: '!@#$%'
         end
 
         it 'returns nil' do
-          expect(remote_server.remote_version).to be_nil
+          expect(remote_server.version).to be_nil
         end
       end
 
@@ -153,7 +143,7 @@ access_token: '!@#$%'
         end
 
         it 'returns nil' do
-          expect(remote_server.remote_version).to be_nil
+          expect(remote_server.version).to be_nil
         end
       end
 
@@ -164,7 +154,7 @@ access_token: '!@#$%'
         end
 
         it 'returns version number definition' do
-          expect(remote_server.remote_version).to eq '1.2.3'
+          expect(remote_server.version).to eq '1.2.3'
         end
       end
     end

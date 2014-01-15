@@ -1,5 +1,5 @@
-require 'net/http'
 require 'uri'
+require 'net/http'
 
 module ExecPHP
 
@@ -71,19 +71,12 @@ module ExecPHP
       end
     end
 
-    # Request a remote server's `exec.php` version.
-    # @return [String] version number definition or nil if request was failed
-    def remote_version
-      batch = ScriptBatch.new do |batch|
-        batch << 'echo EXECPHP_VERSION;'
-      end
-
-      begin
-        version = exec(batch).body
-        return version if version =~ /^\d\.\d\.\d$/
-      rescue StandardError
-        nil
-      end
+    # Request a remote server's `exec.php` script version.
+    # @return [String] version number definition
+    def version
+      script = ScriptBatch.new { |s| s << 'echo EXECPHP_VERSION;' }
+      version = exec(script).body
+      version if version =~ /^\d\.\d\.\d$/
     end
   end
 
