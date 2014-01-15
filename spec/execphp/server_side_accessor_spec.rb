@@ -27,10 +27,8 @@ module ExecPHP
     describe '#render' do
       let(:accessor) { ServerSideAccessor.new('923eb2658336db16d8a55fb4e1877e97') }
 
-      it 'puts $EXECPHP_ACCESS_TOKEN variable definition' do
-        expect(accessor.render).to include <<-PHPSCRIPT
-$EXECPHP_ACCESS_TOKEN = '923eb2658336db16d8a55fb4e1877e97';
-        PHPSCRIPT
+      it 'puts :access_token value' do
+        expect(accessor.render).to include "'923eb2658336db16d8a55fb4e1877e97'"
       end
 
       it 'puts `EXECPHP_VERSION` constant definition' do
