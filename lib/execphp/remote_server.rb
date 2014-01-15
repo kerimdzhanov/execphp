@@ -5,12 +5,6 @@ module ExecPHP
 
   # Represents a remote server accessor.
   class RemoteServer
-    autoload :Benchmark, 'benchmark'
-
-    # Timer output format
-    # @see #ping
-    TIMER_FORMAT = '%4.6f'
-
     # @return [URI] path to a remote server's "/exec.php" script
     attr_reader :execphp_uri
 
@@ -75,48 +69,6 @@ module ExecPHP
       else
         response
       end
-    end
-
-    # Send ping requests to a remote server.
-    # @param count [Fixnum] requests number limit
-    # @param verbose [boolean] puts verbose information to $stdout
-    # @return [Float|false] an average number of seconds that the request takes
-    #   or false if request was failed by some reason
-    def ping(count: 1, verbose: false)
-      batch = ScriptBatch.new do |batch|
-        batch << 'echo "pong!";'
-      end
-
-      if verbose
-        puts "=> #{@execphp_uri}"
-      end
-
-      timers = []
-      count.times do |i|
-        timer = Benchmark.realtime do
-          begin
-            push(batch) do |res|
-              return false unless res.code == '200' && res.body == 'pong!'
-            end
-          rescue StandardError
-            return false
-          end
-        end
-
-        if verbose && count > 1
-          puts "##{i + 1} #{TIMER_FORMAT % timer}"
-        end
-
-        timers << timer
-      end
-
-      average = timers.any? ? (timers.inject(:+).to_f / timers.size).round(6) : 0.0
-
-      if verbose
-        puts "~> #{TIMER_FORMAT % average}"
-      end
-
-      average
     end
 
     # Request a remote server's `exec.php` version.
