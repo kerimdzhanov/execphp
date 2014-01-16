@@ -51,12 +51,12 @@ access_token: '!@#$%'
       end
 
       context 'when filename extension is unknown' do
-        let(:filename) { '/path/to/config.jpeg' }
+        let(:filename) { '/path/to/config.cfg' }
 
         it 'raises an error' do
           expect {
             remote_server.save_as(filename)
-          }.to raise_error RuntimeError, 'Unrecognized config file format (jpeg)'
+          }.to raise_error RuntimeError, 'Unrecognized config file format (.cfg)'
         end
       end
     end

@@ -5,22 +5,24 @@ module ExecPHP
 
   # Represents a remote server accessor.
   class RemoteServer
-    # @return [URI] path to a remote server's "/exec.php" script
+    # @return [URI] path to a remote server's `exec.php` script
     attr_reader :execphp_uri
 
     # @return [String] remote server access token
     attr_reader :access_token
 
-    # Initialize a remote server accessor instance.
-    # @param execphp_url [String] path to a remote server's "/exec.php" script
+    # Initialize a new remote server accessor instance.
+    # @param execphp_url [String] path to a remote server's `exec.php` script
     # @param access_token [String] remote server access token
     def initialize(execphp_url, access_token)
       @execphp_uri  = URI(execphp_url)
       @access_token = access_token
     end
 
+    # Save current instance as a configuration file.
+    # @param filename [String] the name of a configuration file
     def save_as(filename)
-      format = File.extname(filename)[1, 4]
+      format = File.extname(filename)
 
       config = {
         'execphp_url' => @execphp_uri.to_s,
@@ -28,22 +30,24 @@ module ExecPHP
       }
 
       File.write(filename, case format
-        when 'yaml'
+        when '.yaml'
           YAML.dump(config)
-        when 'json'
+        when '.json'
           JSON.pretty_generate(config)
         else
           raise "Unrecognized config file format (#{format})"
       end)
     end
 
+    # Initialize a remote server accessor using a configuration file.
+    # @param filename [String] the name of a configuration file
     def self.from_file(filename)
-      format = File.extname(filename)[1, 4]
+      format = File.extname(filename)
 
       config = case format
-        when 'yaml'
+        when '.yaml'
           YAML.load_file(filename)
-        when 'json'
+        when '.json'
           JSON.load(File.read filename)
         else
           raise "Unrecognized config file format (#{format})"
