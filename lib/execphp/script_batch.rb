@@ -1,7 +1,7 @@
 
 module ExecPHP
 
-  # PHP script batch
+  # Represents a PHP script batch.
   class ScriptBatch
 
     # Constructor accepts a block for initialization.
@@ -13,7 +13,7 @@ module ExecPHP
     end
 
     # Include php file to a current batch.
-    # @param filename [String] full path to a php file
+    # @param filename [String] php script filename
     def include_file(filename)
       contents = File.read(filename)
 
@@ -26,18 +26,16 @@ module ExecPHP
 
       @buffer << "#{contents.chomp}\n\n"
     end
-    alias require_once include_file
 
     # Append a string of php code to a current batch.
     # @param script [String] a string of pure php code
-    def append(script)
-      @buffer << "#{script}\n"
+    def << (script)
+      @buffer << "#{script}\n\n"
     end
-    alias << append
 
-    # @return [String] batch php script
-    def to_script
-      @buffer
+    # @return [String] php script code
+    def to_s
+      @buffer.chomp
     end
   end
 

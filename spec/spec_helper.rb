@@ -9,6 +9,7 @@ if ENV['CI']
   Coveralls.wear!
 end
 
+FIXTURES_DIR = File.join(__dir__, 'fixtures')
 TEMP_DIR = (File.symlink?('/tmp') ? "/#{File.readlink('/tmp')}" : '/tmp')
 
 RSpec.configure do |config|

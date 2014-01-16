@@ -21,22 +21,43 @@ module ExecPHP
     end
 
     describe '#include_file' do
+      def fixture(filename)
+        File.join(FIXTURES_DIR, filename)
+      end
+
       it 'appends a given file contents to a current batch\'s @buffer' do
-        filename = File.join(__dir__, '../fixtures/hello_function.php')
-        batch.require_once filename
-        expect(batch.to_script).to eq <<-EOT
+        batch.include_file(fixture 'function_hello.php')
+        batch.include_file(fixture 'function_goodbye.php')
+        batch.include_file(fixture 'functions_call.php')
+        batch.include_file(fixture 'functions_call.php')
+
+        expect(batch.to_s).to eq <<-PHPSCRIPT
 function say_hello() {
-  echo "Hello Yay!";
-}\n
-        EOT
+  echo "Hello PHP!";
+}
+
+function say_goodbye() {
+  echo "Goodbye PHP!";
+}
+
+say_hello();
+say_goodbye();
+
+say_hello();
+say_goodbye();
+        PHPSCRIPT
       end
     end
 
     describe '#append' do
       it 'appends a given code string to a current batch\'s @buffer' do
-        batch << 'echo "php-5.4.25";'
-        batch << 'echo "php-5.4.26";'
-        expect(batch.to_script).to eq %Q[echo "php-5.4.25";\necho "php-5.4.26";\n]
+        batch << 'echo "Hello PHP";'
+        batch << 'echo "Goodbye PHP";'
+        expect(batch.to_s).to eq <<-PHPSCRIPT
+echo "Hello PHP";
+
+echo "Goodbye PHP";
+        PHPSCRIPT
       end
     end
 

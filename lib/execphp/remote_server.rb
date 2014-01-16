@@ -64,7 +64,7 @@ module ExecPHP
       @request ||= Net::HTTP::Post.new(@execphp_uri.request_uri)
 
       @request.set_form_data('@' => @access_token,
-                             '$' => batch.to_script)
+                             '$' => batch.to_s)
 
       response = @http.request(@request)
 
