@@ -74,7 +74,7 @@ module ExecPHP
     def version
       script = ScriptBatch.new { |s| s << 'echo EXECPHP_VERSION;' }
       version = exec(script).body
-      version if version =~ /^\d\.\d\.\d$/
+      version if version =~ /^\d\.\d\.\d(?:\.\w+)?$/
     end
   end
 

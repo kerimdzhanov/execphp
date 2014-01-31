@@ -140,10 +140,16 @@ access_token: super-secret
     end
 
     describe '#version' do
-      it 'sends the `echo EXECPHP_VERSION;` script batch' do
-        stub_request(:post, 'http://localhost/exec.php')
+      let(:response) { Hash.new }
 
-        remote_server.version
+      before(:each) do
+        stub_request(:post, 'http://localhost/exec.php').to_return(response)
+      end
+
+      subject { remote_server.version }
+
+      it 'sends the "echo EXECPHP_VERSION;" script' do
+        subject # perform the request
 
         a_request(:post, 'http://localhost/exec.php').
           with(body: hash_including('$' => "echo EXECPHP_VERSION;\n")).
@@ -151,37 +157,24 @@ access_token: super-secret
       end
 
       context 'when response status is not ok' do
-        before(:each) do
-          stub_request(:post, 'http://localhost/exec.php')
-            .to_return status: [404, 'Not Found']
-        end
+        let(:response) { {status: [404, 'Not Found']} }
+        it { should be_nil }
+      end
 
-        it 'returns nil' do
-          expect(remote_server.version).to be_nil
+      ['', '12345', '<!DOCTYPE html>...'].each do |body|
+        context 'when response body is unexpected' do
+          let(:response) { {body: body} }
+          it { should be_nil }
         end
       end
 
-      context 'when response body is not as expected' do
-        before(:each) do
-          stub_request(:post, 'http://localhost/exec.php')
-            .to_return body: '<!DOCTYPE html>'
-        end
-
-        it 'returns nil' do
-          expect(remote_server.version).to be_nil
+      %w[1.2.3 0.1.0.pre 1.0.0.rc1 1.2.3.beta].each do |body|
+        context "when response body is '#{body}'" do
+          let(:response) { {body: body} }
+          it { should eq body }
         end
       end
 
-      context 'when response is ok' do
-        before(:each) do
-          stub_request(:post, 'http://localhost/exec.php')
-            .to_return body: '1.2.3'
-        end
-
-        it 'returns version number definition' do
-          expect(remote_server.version).to eq '1.2.3'
-        end
-      end
     end
 
   end
