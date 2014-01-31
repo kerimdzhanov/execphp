@@ -3,7 +3,7 @@ require 'spec_helper'
 module ExecPHP
   describe RemoteServer do
     let(:remote_server) do
-      RemoteServer.new('http://localhost/exec.php', '!@#$%')
+      RemoteServer.new('http://localhost/exec.php', 'super-secret')
     end
 
     describe '#initialize' do
@@ -14,7 +14,7 @@ module ExecPHP
       end
 
       it 'assigns a given :access_token' do
-        expect(remote_server.access_token).to eq '!@#$%'
+        expect(remote_server.access_token).to eq 'super-secret'
       end
     end
 
@@ -27,7 +27,7 @@ module ExecPHP
               .with('/path/to/config.yaml', <<-YAML)
 ---
 execphp_url: http://localhost/exec.php
-access_token: '!@#$%'
+access_token: super-secret
           YAML
 
           remote_server.save_as(filename)
@@ -42,7 +42,7 @@ access_token: '!@#$%'
               .with('/path/to/config.json', <<-JSON.chomp)
 {
   "execphp_url": "http://localhost/exec.php",
-  "access_token": "!@#$%"
+  "access_token": "super-secret"
 }
           JSON
 
@@ -101,7 +101,7 @@ access_token: '!@#$%'
         remote_server.exec(batch)
 
         a_request(:post, 'http://localhost/exec.php').
-          with(body: hash_including('@' => '!@#$%')).
+          with(body: hash_including('@' => 'super-secret')).
             should have_been_requested
       end
 
