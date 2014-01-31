@@ -88,7 +88,10 @@ access_token: super-secret
         ScriptBatch.new { |s| s << 'echo "PHP Test!";' }
       end
 
-      before(:each) { stub_request(:post, 'http://localhost/exec.php') }
+      before(:each) do
+        stub_request(:post, 'http://localhost/exec.php')
+          .to_return(body: 'PHP Test!')
+      end
 
       it 'pushes a given script batch to a specified :exec_uri' do
         remote_server.exec(batch)
@@ -111,6 +114,28 @@ access_token: super-secret
         a_request(:post, 'http://localhost/exec.php').
           with(body: hash_including({'$' => "echo \"PHP Test!\";\n"})).
             should have_been_requested
+      end
+
+      it 'returns an http response' do
+        res = remote_server.exec(batch)
+        expect(res).to be_a Net::HTTPOK
+        expect(res.body).to eq 'PHP Test!'
+      end
+
+      context 'when block given' do
+        it 'yields it passing a `response` with readable body' do
+          remote_server.exec(batch) do |res|
+            expect(res).to be_a Net::HTTPOK
+
+            body = ''
+
+            res.read_body do |segment|
+              body << segment
+            end
+
+            expect(body).to eq 'PHP Test!'
+          end
+        end
       end
     end
 

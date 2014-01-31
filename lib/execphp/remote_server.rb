@@ -66,13 +66,7 @@ module ExecPHP
       @request.set_form_data('@' => @access_token,
                              '$' => batch.to_s)
 
-      response = @http.request(@request)
-
-      if block_given?
-        block.call(response)
-      else
-        response
-      end
+      @http.request(@request, &block)
     end
 
     # Request a remote server's `exec.php` script version.
