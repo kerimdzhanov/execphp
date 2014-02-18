@@ -61,12 +61,12 @@ module ExecPHP
     # @param block [Proc] optional callback
     def exec(batch, &block)
       @http ||= Net::HTTP.new(@execphp_uri.host, @execphp_uri.port)
-      @request ||= Net::HTTP::Post.new(@execphp_uri.request_uri)
 
-      @request.set_form_data('@' => @access_token,
-                             '$' => batch.to_s)
+      request = Net::HTTP::Post.new(@execphp_uri.request_uri)
+      request.set_form_data('@' => @access_token,
+                            '$' => batch.to_s)
 
-      @http.request(@request, &block)
+      @http.request(request, &block)
     end
 
     # Request a remote server's `exec.php` script version.
