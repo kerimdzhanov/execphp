@@ -6,11 +6,12 @@ require 'execphp/version'
 Gem::Specification.new do |spec|
   spec.name          = 'execphp'
   spec.version       = ExecPHP::VERSION
-  spec.summary       = 'Lets you run php code on a remote server from ruby'
+  spec.summary       = 'Lets you run php code bundles on your remote Apache/Nginx/IIS (+mod_php) servers'
   spec.homepage      = 'https://github.com/kerimdzhanov/execphp'
 
   spec.description   = <<-EOT.chomp
-Lets you run php code on a remote server from ruby
+ExecPHP is a ruby library (gem) that lets you run PHP code bundles on your remote servers.
+You need to have up and running Apache/Nginx/IIS server with `mod_php` enabled in order to run your PHP code there.
   EOT
 
   spec.author        = 'Dan Kerimdzhanov'

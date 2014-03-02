@@ -6,7 +6,7 @@ ExecPHP
 [![Dependency Status](https://gemnasium.com/kerimdzhanov/execphp.png)](https://gemnasium.com/kerimdzhanov/execphp)
 [![Coverage Status](https://coveralls.io/repos/kerimdzhanov/execphp/badge.png)](https://coveralls.io/r/kerimdzhanov/execphp)
 
-ExecPHP lets you run PHP code on a remote server from ruby.
+ExecPHP is a ruby library (gem) that lets you run PHP code bundles on your remote servers.
 You need to have up and running Apache/Nginx/IIS server with `mod_php` enabled in order to run your PHP code there.
 
 Requirements
