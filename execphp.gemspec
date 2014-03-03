@@ -24,7 +24,7 @@ You need to have up and running Apache/Nginx/IIS server with `mod_php` enabled i
   spec.require_paths = %w[lib]
 
   spec.platform      = Gem::Platform::RUBY
-  spec.required_ruby_version = '~> 2.0'
+  spec.required_ruby_version = '>= 2.0.0'
 
   spec.add_development_dependency 'bundler', '~> 1.5.2'
 end

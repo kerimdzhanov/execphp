@@ -13,11 +13,11 @@ Requirements
 ------------
 
 **Client-side:**
-* Ruby 2.0.0
+* Ruby 2.0.0 and above
 
 **Server-side:**
 * Apache/Nginx/IIS
-* PHP4, PHP5
+* PHP4, PHP5 and above
 
 Installation
 ------------
