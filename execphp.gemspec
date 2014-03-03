@@ -26,6 +26,5 @@ You need to have up and running Apache/Nginx/IIS server with `mod_php` enabled i
   spec.platform      = Gem::Platform::RUBY
   spec.required_ruby_version = '~> 2.0'
 
-  spec.add_development_dependency 'rake',   '~> 10.1.1'
   spec.add_development_dependency 'bundler', '~> 1.5.2'
 end
